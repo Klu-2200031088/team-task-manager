@@ -4,6 +4,8 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FolderPlus, Folder } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const Dashboard = () => {
     const [projects, setProjects] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -14,7 +16,7 @@ const Dashboard = () => {
     const fetchProjects = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const res = await axios.get('http://localhost:5000/api/projects', config);
+            const res = await axios.get(`${API_URL}/projects`, config);
             setProjects(res.data);
         } catch (error) {
             console.error('Error fetching projects:', error);
@@ -29,7 +31,7 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.post('http://localhost:5000/api/projects', { title, description }, config);
+            await axios.post(`${API_URL}/projects`, { title, description }, config);
             setShowModal(false);
             setTitle('');
             setDescription('');

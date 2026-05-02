@@ -4,6 +4,8 @@ import { useParams, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Plus, ArrowLeft, Clock, CheckCircle2, CircleDashed } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 const ProjectDetails = () => {
     const { id } = useParams();
     const [project, setProject] = useState(null);
@@ -27,10 +29,10 @@ const ProjectDetails = () => {
     const fetchProjectData = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const projRes = await axios.get(`http://localhost:5000/api/projects/${id}`, config);
+            const projRes = await axios.get(`${API_URL}/projects/${id}`, config);
             setProject(projRes.data);
             
-            const tasksRes = await axios.get(`http://localhost:5000/api/tasks?projectId=${id}`, config);
+            const tasksRes = await axios.get(`${API_URL}/tasks?projectId=${id}`, config);
             setTasks(tasksRes.data);
         } catch (error) {
             console.error('Error fetching project data:', error);
@@ -40,7 +42,7 @@ const ProjectDetails = () => {
     const fetchUsers = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            const res = await axios.get('http://localhost:5000/api/auth/users', config);
+            const res = await axios.get(`${API_URL}/auth/users`, config);
             setUsers(res.data);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -51,7 +53,7 @@ const ProjectDetails = () => {
         e.preventDefault();
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.post('http://localhost:5000/api/tasks', {
+            await axios.post(`${API_URL}/tasks`, {
                 title, description, status, assignedTo, dueDate, projectId: id
             }, config);
             setShowTaskModal(false);
@@ -64,7 +66,7 @@ const ProjectDetails = () => {
     const updateTaskStatus = async (taskId, newStatus) => {
         try {
             const config = { headers: { Authorization: `Bearer ${user.token}` } };
-            await axios.put(`http://localhost:5000/api/tasks/${taskId}/status`, { status: newStatus }, config);
+            await axios.put(`${API_URL}/tasks/${taskId}/status`, { status: newStatus }, config);
             fetchProjectData();
         } catch (error) {
             console.error('Error updating task status:', error);
