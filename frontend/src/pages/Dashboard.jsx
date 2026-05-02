@@ -113,8 +113,8 @@ const Dashboard = () => {
             )}
 
             {showModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-                    <div className="card glass-panel" style={{ width: '100%', maxWidth: '500px' }}>
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100, padding: '1rem' }}>
+                    <div className="card glass-panel" style={{ width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
                         <h2 className="text-xl mb-4">Create New Project</h2>
                         <form onSubmit={handleCreateProject}>
                             <div className="input-group">
