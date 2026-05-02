@@ -27,13 +27,22 @@ exports.getTasks = async (req, res) => {
         const projectId = req.query.projectId;
         let query = {};
         
-        if (projectId) {
-            query.project = projectId;
+        if (req.user.role !== 'Admin') {
+            const userProjects = await Project.find({ $or: [{ owner: req.user._id }, { members: req.user._id }] }).select('_id');
+            const projectIds = userProjects.map(p => p._id);
+            if (projectId) {
+                if (!projectIds.some(id => id.toString() === projectId)) {
+                    return res.status(403).json({ message: 'Not authorized' });
+                }
+                query.project = projectId;
+            } else {
+                query.project = { $in: projectIds };
+            }
+        } else {
+            if (projectId) query.project = projectId;
         }
 
         const tasks = await Task.find(query).populate('assignedTo', 'name email').populate('project', 'title');
-        
-        // Filter tasks if not admin? Depending on requirements, we can show all tasks in a project the user belongs to.
         res.json(tasks);
     } catch (error) {
         res.status(500).json({ message: error.message });

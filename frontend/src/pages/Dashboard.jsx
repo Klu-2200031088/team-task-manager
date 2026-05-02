@@ -4,10 +4,11 @@ import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FolderPlus, Folder } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const Dashboard = () => {
     const [projects, setProjects] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -23,8 +24,19 @@ const Dashboard = () => {
         }
     };
 
+    const fetchTasks = async () => {
+        try {
+            const config = { headers: { Authorization: `Bearer ${user.token}` } };
+            const res = await axios.get(`${API_URL}/tasks`, config);
+            setTasks(res.data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
+
     useEffect(() => {
         fetchProjects();
+        fetchTasks();
     }, []);
 
     const handleCreateProject = async (e) => {
@@ -44,13 +56,37 @@ const Dashboard = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl">Projects Dashboard</h1>
+                <h1 className="text-2xl">Dashboard</h1>
                 {user.role === 'Admin' && (
                     <button onClick={() => setShowModal(true)} className="btn">
                         <FolderPlus size={18} /> New Project
                     </button>
                 )}
             </div>
+
+            <div className="mb-8">
+                <h2 className="text-xl mb-4">Tasks Overview</h2>
+                <div className="grid">
+                    <div className="card text-center">
+                        <h3 className="text-2xl" style={{ color: 'var(--primary)' }}>{tasks.length}</h3>
+                        <p className="text-muted">Total Tasks</p>
+                    </div>
+                    <div className="card text-center">
+                        <h3 className="text-2xl" style={{ color: '#f59e0b' }}>{tasks.filter(t => t.status === 'In Progress').length}</h3>
+                        <p className="text-muted">In Progress</p>
+                    </div>
+                    <div className="card text-center">
+                        <h3 className="text-2xl" style={{ color: '#ef4444' }}>{tasks.filter(t => t.dueDate && new Date(t.dueDate) < new Date() && t.status !== 'Done').length}</h3>
+                        <p className="text-muted">Overdue</p>
+                    </div>
+                    <div className="card text-center">
+                        <h3 className="text-2xl" style={{ color: '#10b981' }}>{tasks.filter(t => t.status === 'Done').length}</h3>
+                        <p className="text-muted">Completed</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 className="text-xl mb-4">Projects</h2>
 
             {projects.length === 0 ? (
                 <div className="card text-center text-muted" style={{ padding: '4rem' }}>

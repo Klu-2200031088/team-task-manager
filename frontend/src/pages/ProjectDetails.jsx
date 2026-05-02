@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { Plus, ArrowLeft, Clock, CheckCircle2, CircleDashed } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const ProjectDetails = () => {
     const { id } = useParams();

@@ -18,8 +18,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 
-app.get('/', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.send('API is running...');
+});
+
+const path = require('path');
+// Serve frontend
+app.use(express.static(path.join(__dirname, 'public')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 5000;
