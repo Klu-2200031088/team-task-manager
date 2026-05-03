@@ -130,8 +130,8 @@ const ProjectDetails = () => {
             </div>
 
             {showTaskModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100, padding: '1rem' }}>
-                    <div className="card glass-panel" style={{ width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start', zIndex: 100, padding: '2rem 1rem', overflowY: 'auto' }}>
+                    <div className="card glass-panel" style={{ width: '100%', maxWidth: '500px', margin: 'auto' }}>
                         <h2 className="text-xl mb-4">Add New Task</h2>
                         <form onSubmit={handleCreateTask}>
                             <div className="input-group">
